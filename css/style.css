@@ -1,0 +1,210 @@
+:root {
+    --atom-bg: #312f3c;
+    --atom-nav-bg: #1a1822;
+    --atom-color: #ffffff;
+    --atom-padding: 15px;
+    --atom-mount-bg: #383544;
+    --atom-mount-color: #ffffff;
+    --atom-draggable-border-weight: 2px;
+    --canvas-color: rgb(255 255 255 / 25%);
+    --ripple-color-rgb: 255, 255, 255;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    background-color: var(--atom-bg);
+    color: var(--atom-color);
+    font-family: 'Roboto', sans-serif;
+    height: 100vh;
+}
+
+button {
+    font-family: inherit;
+}
+
+.atom {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.atom-nav {
+    background-color: var(--atom-nav-bg);
+}
+
+.atom-nav ul {
+    display: flex;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    gap: 5px;
+    padding: 5px;
+}
+
+.atom-nav .list-item {
+    position: relative;
+    padding: 7px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: transparent;
+    color: var(--atom-color);
+}
+
+.atom-nav .list-item:hover {
+    background-color: rgb(255 255 255 / 25%);
+}
+
+.atom-nav__opt {
+    display: none !important;
+    flex-direction: column;
+    position: absolute !important;
+    background-color: var(--atom-nav-bg);
+    min-width: 100px;
+}
+
+.atom-content {
+    display: flex;
+    flex-grow: 1;
+}
+
+.atom-content__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: var(--atom-padding);
+}
+
+.atom-content__aside hr {
+    border: none;
+    border-bottom: solid 1px rgb(0 0 0 / 25%);
+    margin: 5px 0;
+}
+
+.atom-content__aside .atom-rack__mount {
+    background-color: var(--atom-mount-bg);
+    color: var(--atom-mount-color);
+    border-radius: 10px;
+}
+
+.atom-content__aside .atom-rack__mount .atom-mount__header {
+    background-color: rgb(0 0 0 / 25%);
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: grab;
+}
+
+.atom-content__aside .atom-rack__mount .atom-mount__body {
+    padding: 10px;
+}
+
+.atom-content__aside .atom-rack__mount .atom-mount__footer {
+    padding: 5px 10px;
+}
+
+.atom-content__aside .atom-rack__mount .atom-body__layers,
+.atom-content__aside .atom-rack__mount .atom-footer__options {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.atom-content__aside .atom-rack__mount .atom-footer__options {
+    display: flex;
+    justify-content: space-between;
+}
+
+.atom-content__aside .atom-rack__mount .atom-footer__options .atom-btn {
+    background-color: transparent;
+    color: #ffffff;
+    border: 0;
+    border-radius: 15px;
+}
+
+.atom-content__canvas {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    max-height: 100%;
+}
+
+.atom-footer {
+    background: rgb(0 0 0 / 25%);
+    padding: var(--atom-padding);
+    overflow-y: auto;
+    min-height: 200px;
+}
+
+.ripple {
+    display: inline-block;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple.ripple-center ._ripple--enter {
+    left: 0 !important;
+    top: 0 !important;
+}
+
+._ripple--enter {
+    z-index: 0;
+    position: absolute;
+    /* The absolute position we mentioned earlier */
+    border-radius: 50%;
+    transform: scale(0);
+    padding: 0.5rem;
+    animation: rippleEnter 0.3s forwards;
+    background-color: rgba(var(--ripple-color-rgb), 0.3);
+    filter: blur(5px);
+}
+
+._ripple--leave {
+    animation: rippleLeave 0.6s;
+}
+
+@keyframes rippleEnter {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(2);
+    }
+}
+
+@keyframes rippleLeave {
+    from {
+        transform: scale(2);
+        opacity: 1;
+    }
+    to {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+
+/* Small devices (landscape phones, 576px and up) */
+
+@media (max-width: 576px) {
+    #app {
+        flex-direction: column-reverse;
+    }
+    #app .app__side-bar {
+        width: 100%;
+        padding-bottom: 0;
+    }
+}
+
+@media (max-width: 1080px) {
+     :root {
+        --gutter-padding-x: 0;
+    }
+}
