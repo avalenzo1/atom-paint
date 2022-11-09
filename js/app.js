@@ -50,11 +50,19 @@ const Atom = (function() {
         const move = (e) => {
             const dim = canvas.getBoundingClientRect();
 
-            client.x = e.clientX - dim.x;
-            client.y = e.clientY - dim.y;
+            if (e.clientX || e.clientY) {            
+                client.x = e.clientX - dim.x;
+                client.y = e.clientY - dim.y;
+            }
+
+            if (e.touches) {  
+                client.x = e.touches[0].clientX - dim.x;
+                client.y = e.touches[0].clientX - dim.y;
+            }
         };
 
         canvas.addEventListener("mousemove", move);
+        canvas.addEventListener("touchmove", move);
 
         const render = () => {
             ctx.globalCompositeOperation = "difference";
