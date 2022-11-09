@@ -65,7 +65,7 @@ const Atom = (function() {
 
             if (e.touches) {  
                 client.x = e.touches[0].clientX - dim.x;
-                client.y = e.touches[0].clientX - dim.y;
+                client.y = e.touches[0].clientY - dim.y;
             }
         };
 
