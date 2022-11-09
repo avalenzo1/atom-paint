@@ -39,6 +39,14 @@ const Atom = (function() {
             y: 0
         }
 
+        canvas.addEventListener("touchstart", () => {
+            isActive = true;
+        });
+
+        canvas.addEventListener("touchend", () => {
+            isActive = false;
+        });
+
         canvas.addEventListener("mousedown", () => {
             isActive = true;
         });
