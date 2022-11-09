@@ -283,9 +283,32 @@ const Atom = (function() {
 
             let currentObject;
 
+            // remove redundancy in touchmove
+
             canvas.addEventListener("mousedown", (e) => {
                 cache.updateClient(e);
                 canvas.addEventListener("mousemove", this.move);
+
+                switch (globals.currentObject()) {
+                    case "Paint":
+                        currentObject = new Paint();
+                        break;
+                    case "Square":
+                        currentObject = new Square();
+                        currentObject.setOrigin(cache.client.x, cache.client.y)
+                        break;
+                    case "Rectangle":
+                        currentObject = new Rectangle();
+                        currentObject.setOrigin(cache.client.x, cache.client.y)
+                        break;
+                }
+
+                cache.layers[cache.currentLayer].appendObject(currentObject);
+            });
+
+            canvas.addEventListener("touchstart", (e) => {
+                cache.updateClient(e);
+                canvas.addEventListener("touchmove", this.move);
 
                 switch (globals.currentObject()) {
                     case "Paint":
@@ -308,6 +331,12 @@ const Atom = (function() {
                 currentObject = null;
 
                 canvas.removeEventListener("mousemove", this.move);
+            });
+
+            canvas.addEventListener("touchend", () => {
+                currentObject = null;
+
+                canvas.removeEventListener("touchmove", this.move);
             });
 
             document.addEventListener("keydown", (e) => {
@@ -339,10 +368,18 @@ const Atom = (function() {
         }
 
         updateClient(e) {
+            e.preventDefault();
             const dim = canvas.getBoundingClientRect();
 
-            this.client.x = e.clientX - dim.x;
-            this.client.y = e.clientY - dim.y;
+            if (e.clientX || e.clientY) {            
+                client.x = e.clientX - dim.x;
+                client.y = e.clientY - dim.y;
+            }
+
+            if (e.touches) {  
+                client.x = e.touches[0].clientX - dim.x;
+                client.y = e.touches[0].clientY - dim.y;
+            }
         }
 
         render() {
