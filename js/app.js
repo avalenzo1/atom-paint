@@ -56,6 +56,7 @@ const Atom = (function() {
         });
 
         const move = (e) => {
+            e.preventDefault();
             const dim = canvas.getBoundingClientRect();
 
             if (e.clientX || e.clientY) {            
