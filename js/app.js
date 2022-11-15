@@ -4,6 +4,17 @@ function UUID() {
     );
 }
 
+function isEmpty(variable) {
+    return typeof variable !== 'undefined' && variable;
+}
+
+function supportsTouch() {
+    return (('ontouchstart' in window) ||
+        (navigator.maxTouchPoints > 0) ||
+        (navigator.msMaxTouchPoints > 0));
+}
+
+
 class Element {
     constructor(querySelector) {
         this.HTMLElement = document.querySelector(querySelector);
@@ -283,61 +294,61 @@ const Atom = (function() {
 
             let currentObject;
 
-            // remove redundancy in touchmove
-
-            canvas.addEventListener("mousedown", (e) => {
-                cache.updateClient(e);
-                canvas.addEventListener("mousemove", this.move);
-
-                switch (globals.currentObject()) {
-                    case "Paint":
-                        currentObject = new Paint();
-                        break;
-                    case "Square":
-                        currentObject = new Square();
-                        currentObject.setOrigin(cache.client.x, cache.client.y)
-                        break;
-                    case "Rectangle":
-                        currentObject = new Rectangle();
-                        currentObject.setOrigin(cache.client.x, cache.client.y)
-                        break;
-                }
-
-                cache.layers[cache.currentLayer].appendObject(currentObject);
-            });
-
-            canvas.addEventListener("touchstart", (e) => {
-                cache.updateClient(e);
-                canvas.addEventListener("touchmove", this.move);
-
-                switch (globals.currentObject()) {
-                    case "Paint":
-                        currentObject = new Paint();
-                        break;
-                    case "Square":
-                        currentObject = new Square();
-                        currentObject.setOrigin(cache.client.x, cache.client.y)
-                        break;
-                    case "Rectangle":
-                        currentObject = new Rectangle();
-                        currentObject.setOrigin(cache.client.x, cache.client.y)
-                        break;
-                }
-
-                cache.layers[cache.currentLayer].appendObject(currentObject);
-            });
-
-            canvas.addEventListener("mouseup", () => {
-                currentObject = null;
-
-                canvas.removeEventListener("mousemove", this.move);
-            });
-
-            canvas.addEventListener("touchend", () => {
-                currentObject = null;
-
-                canvas.removeEventListener("touchmove", this.move);
-            });
+            if (supportsTouch()) {
+                canvas.addEventListener("touchstart", (e) => {
+                    cache.updateClient(e);
+                    canvas.addEventListener("touchmove", this.move);
+    
+                    switch (globals.currentObject()) {
+                        case "Paint":
+                            currentObject = new Paint();
+                            break;
+                        case "Square":
+                            currentObject = new Square();
+                            currentObject.setOrigin(cache.client.x, cache.client.y)
+                            break;
+                        case "Rectangle":
+                            currentObject = new Rectangle();
+                            currentObject.setOrigin(cache.client.x, cache.client.y)
+                            break;
+                    }
+    
+                    cache.layers[cache.currentLayer].appendObject(currentObject);
+                });
+    
+                canvas.addEventListener("touchend", () => {
+                    currentObject = null;
+    
+                    canvas.removeEventListener("touchmove", this.move);
+                });
+            } else {
+                canvas.addEventListener("mousedown", (e) => {
+                    cache.updateClient(e);
+                    canvas.addEventListener("mousemove", this.move);
+    
+                    switch (globals.currentObject()) {
+                        case "Paint":
+                            currentObject = new Paint();
+                            break;
+                        case "Square":
+                            currentObject = new Square();
+                            currentObject.setOrigin(cache.client.x, cache.client.y)
+                            break;
+                        case "Rectangle":
+                            currentObject = new Rectangle();
+                            currentObject.setOrigin(cache.client.x, cache.client.y)
+                            break;
+                    }
+    
+                    cache.layers[cache.currentLayer].appendObject(currentObject);
+                });
+    
+                canvas.addEventListener("mouseup", () => {
+                    currentObject = null;
+    
+                    canvas.removeEventListener("mousemove", this.move);
+                });
+            }
 
             document.addEventListener("keydown", (e) => {
                 if (e.ctrlKey && e.key === "z") {
@@ -368,18 +379,10 @@ const Atom = (function() {
         }
 
         updateClient(e) {
-            e.preventDefault();
             const dim = canvas.getBoundingClientRect();
 
-            if (e.clientX || e.clientY) {            
-                client.x = e.clientX - dim.x;
-                client.y = e.clientY - dim.y;
-            }
-
-            if (e.touches) {  
-                client.x = e.touches[0].clientX - dim.x;
-                client.y = e.touches[0].clientY - dim.y;
-            }
+            this.client.x = e.clientX - dim.x;
+            this.client.y = e.clientY - dim.y;
         }
 
         render() {
